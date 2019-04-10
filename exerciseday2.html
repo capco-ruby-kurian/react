@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Exercise </title>
+ <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+</head>
+<body>
+  <div id='app'></div>
+
+  <script type='text/babel'>
+    function EmpList (props) {
+      return (
+        <ul>
+        <h2>Active Employee</h2>
+          {props.list.map((name) => (
+            <li key={name}>
+              <span>{name}</span>
+              <button onClick={() => props.onRemoveEmp(name)}> Remove </button>
+              <button onClick={() => props.onDeactivateEmp(name)}> Deactivate </button>
+            </li>
+          ))}
+
+          <h2>Deactivate Employee</h2>
+          {props.list.map((name) => (
+            <li key={name}>
+              <span>{name}</span>
+              <button onClick={() => props.onDeactivateEmp(name)}> Activate </button>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          employees: ['kan', 'parvin', 'shubham'],
+          input: '',
+        }
+        this.RemoveEmp = this.RemoveEmp.bind(this)
+        this.updateInput = this.updateInput.bind(this)
+        this.AddEmp = this.AddEmp.bind(this)
+        this.DeactivateEmp = this.DeactivateEmp.bind(this)
+      }
+      AddEmp() {
+        this.setState((currentState) => {
+          return {
+            employees: currentState.employees.concat([this.state.input]),
+            input: ''
+          }
+        })
+      }
+      RemoveEmp(name) {
+        this.setState((currentState) => {
+          return {
+            employees: currentState.employees.filter((employee) => employee !== name)
+          }
+        })
+      }
+
+      DeactivateEmp() {
+        this.setState((currentState) => {
+            this.setState((currentState) => {
+                return {
+                   employees: currentState.employees.concat([this.state.input]),
+                }
+              })
+        })
+      }
+
+      updateInput(e) {
+        const value = e.target.value
+        this.setState({
+          input: value
+        })
+      }
+      render() {
+        return (
+          <div>
+            <input
+              type='text'
+              placeholder='new employee'
+              value={this.state.input}
+              onChange={this.updateInput}
+            />
+            <button onClick={this.AddEmp}>
+              Submit
+            </button>
+            <EmpList
+              list={this.state.employees}
+              onRemoveEmp={this.RemoveEmp}
+              onDeactivateEmp={this.DeactivateEmp}
+            />
+          </div>
+        )
+      }
+    }
+    ReactDOM.render(
+      <App />,
+      document.getElementById('app')
+    )
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <title>React</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script type='text/babel'>
+        function EmpList(props) {
+            return(
+                <ul>
+                {props.list.map((name)=>(
+                    <li>
+                    {name}
+                    </li>
+                ))}
+                </ul>
+            )
+            } 
+
+        function App() {
+            const employees = ['ankit', 'pravin', 'omkar']
+            return (
+                <div>
+                    <EmpList list={employees} />
+                </div>
+            )
+        }
+
+        ReactDOM.render(
+             <App />,
+             document.getElementById('app')
+         )
+        
+    </script>
+</body>
+</html>

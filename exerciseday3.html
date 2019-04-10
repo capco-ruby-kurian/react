@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>First React App</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+</head>
+<body>
+    <div id='app'></div>
+    <script type='text/babel'>
+    const wrapper = {
+        display: 'flex',
+        height: '500px',
+
+        
+    };
+    const itemStyle = {
+        color: 'blue',
+        width: '300px'
+    }
+    const img = {
+        width: '50px',
+        height: '50px'
+    }
+    function Languages (props) {
+      return (
+       <ul>
+       <h1>Languages</h1>
+          {props.list.map((lang) => (
+            <li key={lang}>
+              <div onClick={() => props.onShowData(lang)}>{lang}</div>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    function Data(props) {
+        console.log("props",props)
+        return (
+            // console.log("props",props)
+            <div style={wrapper}>
+                {props.data.map((data) => ( 
+                    <div>
+                        <h3 style={itemStyle}>{data.name}</h3>
+                        <img style={img} src={data.owner.avatar_url} />
+                        <p>Watcher: {data.watchers}</p>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+    class App extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          languages: ['All','JavaScript', 'CSS', 'C++','C','Python'],
+          showData: false,
+          items:'',
+          filteredData:'',
+          showLanguage:''
+        }
+        this.showData = this.showData.bind(this)
+      }
+        componentDidMount() {
+            var url="https://api.github.com/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories"
+            fetch(url)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    console.log(result)
+                this.setState({
+                    items: result.items
+                });
+                },
+                (error) => {
+                // this.setState({
+                //     isLoaded: true,
+                //     error
+                // });
+                }
+            )
+        }
+      showData(lang){
+        console.log("lang:",lang)
+        if(lang == 'All') {
+
+        }
+        else {
+            this.setState((currentState) => {
+            console.log(currentState)
+            // var data=currentState.items.filter((item) => {
+            //     console.log("lang::",item.language)
+            //     })
+          return {
+            filteredData: currentState.items.filter((item) => item.language == lang),
+            showData: true,
+          }
+        })
+        }
+      }
+      render() {
+        return (
+          <div>
+            <Languages 
+            list={this.state.languages}
+            onShowData={this.showData}
+            />
+            
+            {
+            this.state.showData ? 
+            <Data 
+            data={this.state.filteredData}/> 
+            : 
+            null
+            }
+          </div>
+        )
+      }
+    }
+    ReactDOM.render(
+      <App />,
+      document.getElementById('app')
+    )
+  </script>
+</body>
+</html>
